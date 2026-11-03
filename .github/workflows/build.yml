@@ -2,13 +2,13 @@
 name: Build Android APK
 
 on:
-  workflow_dispatch:
   push:
     branches: [main]
+  workflow_dispatch:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout project
@@ -20,8 +20,10 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Check Android SDK
+        run: |
+          echo "SDK: $ANDROID_HOME"
+          ls "$ANDROID_HOME/platforms"
 
       - name: Build APK
         run: |
@@ -33,3 +35,4 @@ jobs:
         with:
           name: UAE-Parking-APK
           path: '**/build/outputs/apk/debug/*.apk'
+          if-no-files-found: error
